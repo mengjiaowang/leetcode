@@ -9,8 +9,8 @@ public:
         else{
             int middle_of_a = (start_of_a + end_of_a) / 2;
             int middle_of_b = (start_of_b + end_of_b) / 2;
-            int length_of_first_half_of_a = (end_of_a - start_of_a + 1) / 2;
-            int length_of_first_half_of_b = (end_of_b - start_of_b + 1) / 2;
+            int length_of_first_half_of_a = middle_of_a - start_of_a + 1;
+            int length_of_first_half_of_b = middle_of_b - start_of_b + 1;
             int length_of_first_half = length_of_first_half_of_a + length_of_first_half_of_b;
             if(k < length_of_first_half){
                 if(A[middle_of_a] > B[middle_of_b]){ 
