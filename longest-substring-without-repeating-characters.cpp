@@ -1,38 +1,27 @@
+// http://leetcode.com/2011/05/longest-substring-without-repeating-characters.html
+
+#define MAX(a,b) (a) > (b) ? (a) : (b)
+
 class Solution {
     public:
         int lengthOfLongestSubstring(string s) {
-            int maxLength = 0;
-            int substring[256];
-
-            memset((void*)substring, 0, 256*4);
-
-            for(int i = 0; i != s.size(); ++i)
-            {
-                for(int j = i; j != s.size(); ++j)
-                {
-                    if(substring[s[j]] == 1)
-                    {
-                        int length = 0;
-                        for(int k = 0; k != 256; ++ k)
-                        {
-                            if(substring[k]) length ++;
-                        }
-                        if(length > maxLength) maxLength = length;
-                        memset(substring, 0, 256*4);
-                        break;
+            int maxLength = 0, i = 0, j = 0;
+            bool map [256] = {false};
+            while(j < s.size()){
+                if(map[s[j]] == false){
+                    map[s[j]] = true;
+                    j ++;
+                }else{
+                    maxLength = MAX(maxLength, j - i);
+                    while(s[i] != s[j]){
+                        map[s[i]] = false;
+                        ++ i;
                     }
-                    else
-                    {
-                        substring[s[j]] = 1;
-                    }
+                    ++ i;
+                    ++ j;
                 }
             }
-            int length = 0;
-            for(int k = 0; k != 256; ++ k)
-            {
-                if(substring[k]) length ++;
-            }
-            if(length > maxLength) maxLength = length;            
+            maxLength = MAX(maxLength, j - i);
             return maxLength;
         }
 };
