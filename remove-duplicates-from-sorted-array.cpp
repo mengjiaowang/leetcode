@@ -1,19 +1,13 @@
-ass Solution {
+class Solution {
     public:
         int removeDuplicates(int A[], int n) {
             if(n < 2) return n;
-            int i = 0, removed = 0;
-            while(i < n - removed){
-                int j = i + 1;
-                while(A[i] == A[j] && j < n - removed) ++j;
-                if(j - i < 2) i = j;
+            int i = 0, j = 0;
+            while(j != n){
+                while(A[i] == A[j] && j != n) ++j;
+                if(j - i == 1) ++i;
                 else{
-                    int tmp = j;
-                    for(int k = i + 1; j < n - removed; ++j, ++k){
-                        A[k] = A[j];
-                    }
-                    removed += tmp - i - 1;
-                    i = i + 1;
+                    ++i; A[i] = A[j];
                 }
             }
             return i;
