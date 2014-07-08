@@ -1,10 +1,9 @@
 class Solution {
     public:
         vector<int> plusOne(vector<int> &digits) {
-            vector<int> res; int flag = 0;
+            vector<int> res; int flag = 1;
             for(int i = digits.size() - 1; i >= 0; --i){
                 int tmp = digits[i] + flag;
-                if(i == digits.size() - 1) tmp ++;
                 if(tmp < 10) {res.push_back(tmp); flag = 0;}
                 else {res.push_back(tmp-10); flag = 1;}
             }
