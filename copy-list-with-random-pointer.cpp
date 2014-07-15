@@ -2,7 +2,8 @@ class Solution {
     public:
         RandomListNode *copyRandomList(RandomListNode *head) {
             if(head == NULL) return NULL;
-            RandomListNode *headNew = NULL, *curNew = headNew, *curOriginal = head, *rand = head->random;
+            RandomListNode *headNew = NULL, *curNew = headNew, *curOriginal = head;
+            unordered_map<RandomListNode*, RandomListNode*> mapping;
             while(curOriginal != NULL){
                 if(headNew == NULL){
                     headNew = new RandomListNode(curOriginal->label);
@@ -12,22 +13,17 @@ class Solution {
                     curNew->next = new RandomListNode(curOriginal->label);
                     curNew = curNew->next;
                 }
+                mapping[curOriginal] = curNew;
                 curOriginal = curOriginal->next;
             }
             curOriginal = head; curNew = headNew;
+            mapping[NULL] = NULL;
             while(curOriginal != NULL && curNew != NULL){
-                RandomListNode *cur1 = head, *cur2 = headNew;
-                if(curOriginal->random == NULL) curNew->random = NULL;
-                else{
-                    while(cur1 != curOriginal->random){
-                        cur1 = cur1->next;
-                        cur2 = cur2->next;
-                    }
-                    curNew->random = cur2;
-                }
+                curNew->random = mapping[curOriginal->random];
                 curOriginal = curOriginal->next;
                 curNew = curNew->next;
             }
             return headNew;
         }
+
 };
