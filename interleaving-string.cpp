@@ -1,22 +1,27 @@
 class Solution {
     public:
-
         bool isInterleave(string s1, string s2, string s3) {
-            return isInterleave(s1, 0, s2, 0, s3, 0);
-        }
-
-        bool isInterleave(string &s1, int index1, string &s2, int index2, string &s3, int index3) {
-            if(index1 == s1.size() && index2 == s2.size() && index3 == s3.size())
-                return true;
-
-            bool first = false, second = false;
-            if(index1 < s1.size() && index3 < s3.size() && s1[index1] == s3[index3]){
-                first = isInterleave(s1, index1+1, s2, index2, s3, index3+1);
+            if(s1.size() + s2.size() != s3.size()) return false;
+            bool ** flag = new bool*[s1.size()+1];
+            for(int i = 0; i != s1.size()+1; ++i){
+                flag[i] = new bool[s2.size()+1];
+                memset((void*)flag[i], false, (s2.size()+1)*sizeof(bool));
             }
-            if(index2 < s2.size() && index3 < s3.size() && s2[index2] == s3[index3]){
-                second = isInterleave(s1, index1, s2, index2+1, s3, index3+1);
+            flag[0][0] = true;
+            for(int i = 0; i != s1.size() + 1; ++i){
+                for(int j = 0; j != s2.size() + 1; ++j){
+                    if(j > 0 && i == 0) flag[i][j] = flag[i][j-1] & (s2[j-1] == s3[i+j-1]);
+                    if(i > 0 && j == 0) flag[i][j] = flag[i-1][j] & (s1[i-1] == s3[i+j-1]);
+                    if(i > 0 && j > 0){
+                        flag[i][j] = (flag[i][j-1] & (s2[j-1] == s3[i+j-1])) || (flag[i-1][j] & (s1[i-1] == s3[i+j-1]));
+                    }
+                }
             }
-            return first | second;
+            bool result = flag[s1.size()][s2.size()];
+            for(int i = 0; i != s1.size()+1; ++i){
+                delete flag[i];
+            }
+            delete flag;
+            return result;
         }
-
 };
