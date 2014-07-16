@@ -2,15 +2,12 @@ class Solution {
     public:
         bool canJump(int A[], int n) {
             if(n == 0) return true;
-            bool *flag = new bool[n];
-            memset((void*)flag, false, sizeof(bool)*n);
-            flag[n-1] = true;
-            for(int i = n - 1; i >=0; i --){
-                if(A[i] >= n - i){flag[i] = true; continue;}
-                for(int j = i + 1; j <= i + A[i]; ++j){
-                    if(flag[j] == true){flag[i] = true; break;}
-                }
+            int stop1 = A[0];
+            for(int i = 0; i != n && i <= stop1; ++i){
+                int stop2 = i + A[i];
+                if(stop2 > stop1) stop1 = stop2;
+                if(stop1 >= n - 1) return true;
             }
-            return flag[0];
+            return false;
         }
 };
