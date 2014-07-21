@@ -1,4 +1,4 @@
 leetcode
 ========
 
-My code in leetcode, feel free to use or distribute.
+My leetcode in c++, feel free to use or distribute.
