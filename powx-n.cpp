@@ -8,23 +8,14 @@ class Solution {
                 flag = true;
             }
 
-            res = positivePow(x, n);
+            while(n != 0){
+                if(n % 2 != 0) res = res * x;
+                x = x * x;
+                n = n/2;
+            }
 
             if(flag == false)
                 return res;
             else return 1/res;
-        }
-
-        double positivePow(double x, int n){
-            if(n == 0) return 1;
-            else if(n == 1) return x;
-            else if(n % 2 == 1){
-                double tmp = positivePow(x,n/2);
-                return x*tmp*tmp;
-            }
-            else{
-                double tmp = positivePow(x,n/2);
-                return tmp*tmp;            
-            }
         }
 };
