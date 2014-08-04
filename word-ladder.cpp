@@ -9,17 +9,20 @@ class Solution {
                 string cur = q.front(); q.pop();
                 layerCount --;
                 unordered_set<string>::iterator iter;
-                for(iter = dict.begin(); iter != dict.end(); iter++){
-                    if(checkTransformation(cur, *iter)){
-                        if(cur == end) return depth;
-                        if(checkTransformation(cur, end)) return depth + 1;
-                        if(visited.find(*iter) == visited.end()){
-                            q.push(*iter); 
-                            nextLayerCount ++;
-                            visited.insert(*iter);
+
+                for(int i = 0; i != cur.size(); ++i){
+                    for(char j = 'a'; j < 'z'; ++j){
+                        if(cur[i] == j) continue;
+                        string tmp = cur; tmp[i] = j;
+                        if(tmp == end) return depth + 1;
+                        if(dict.find(tmp) != dict.end()){
+                            q.push(tmp);
+                            dict.erase(tmp);
+                            ++nextLayerCount;
                         }
                     }
                 }
+
                 if(layerCount == 0) {
                     depth ++;
                     layerCount = nextLayerCount;
@@ -29,14 +32,4 @@ class Solution {
             return 0;
         }
 
-        bool checkTransformation(const string &word1, const string &word2){
-            int count = 0;
-            for(int i = 0; i != word1.size(); ++i){
-                if(word1[i] != word2[i]){
-                    count ++;
-                }
-            }
-            if(count == 1) return true;
-            else return false;
-        }
 };
