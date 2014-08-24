@@ -1,15 +1,16 @@
+// http://yucoding.blogspot.com/2013/02/leetcode-question-123-wildcard-matching.html
 class Solution {
     public:
         bool isMatch(const char *s, const char *p) {
-            if(*p == '\0') return *p == *s;
-            if(*p == '?') return isMatch(++s, ++p);
-            else if(*p == '*'){
-                while(*p == '*') ++p;
-                for(p; *s != '\0'; ++s){
-                    if(isMatch(s, p) == true) return true;
-                }
-                return *p == '\0';
+            const char *star = NULL;
+            const char *ss = s;
+            while(*s){
+                if(*s == *p || *p == '?'){ ++s; ++p; continue;}
+                if(*p == '*'){ star = p++; ss = s; continue;}
+                if(star){ p = star + 1; s = ++ss; continue;}
+                return false;
             }
-            else return *p == *s && isMatch(++s, ++p);
+            while(*p == '*') ++p;
+            return !*p;
         }
 };
