@@ -1,61 +1,32 @@
-#include<iostream>
-#include<vector>
-using namespace std;
-
-vector<vector<string> > partition(string s);
-bool testPalindrome(string &str);
-
-int main(){
-    vector<vector<string> > res = partition("efe");
-    for(int i = 0; i != res.size(); ++i){
-        for(int j = 0; j != res[i].size(); ++j){
-            cout << res[i][j] << " ";
+class Solution {
+    public:
+        vector<vector<string>> partition(string s) {
+            vector<vector<string>> result;
+            vector<string> partition;
+            dfs(s, partition, result);
+            return result;
         }
-        cout << endl;
-    }
-    return 0;
-}
 
-vector<vector<string> > partition(string s) {
-    vector<vector<string> > result;
-    if(s.size() == 0) return result;
-    vector<string> tmp; result.push_back(tmp); 
-    for(int i = 0; i != s.size(); ++i){
-        result.back().push_back(s.substr(i,1));
-    }
-    bool flag = true;
-    while(flag){
-        flag = false;
-        int last = result.size() - 1;
-        for(int i = 0; i != result[last].size()-1; ++i){
-            string con = result[last][i] + result[last][i+1];
-            if(testPalindrome(con)){
-                result.push_back(tmp);
-                for(int j = 0; j != i; ++j){
-                    result.back().push_back(result[last][j]);
+        void dfs(string &s, vector<string> &partition, vector<vector<string>> &result) {
+            if(s.size() == 0){
+                result.push_back(partition);
+            }
+            for(int i = 1; i != s.size()+1; ++i){
+                string tmp = s.substr(0, i);
+                if(isPalindrome(tmp)){
+                    partition.push_back(tmp);
+                    string rest = s.substr(i);
+                    dfs(rest, partition, result);
+                    partition.pop_back();
                 }
-                result.back().push_back(con);
-                for(int j = i + 2; j < result[last].size(); ++j){
-                    result.back().push_back(result[last][j]);
-                }
-                flag = true;
             }
         }
-    }
-    if(s.size() > 1 && testPalindrome(s)){
-        result.push_back(tmp);
-        result.back().push_back(s);
-    } 
-    return result;
-}
 
-bool testPalindrome(string &str){
-    if(str.size() < 2) return true;
-    int size = str.size();
-    for(int i = 0; i != size/2; ++i){
-        if(str[i] != str[size-i-1]){
-            return false;
+        bool isPalindrome(string &s){
+            if(s.size() <= 1) return true;
+            for(int i = 0; i < s.size()/2; ++i){
+                if(s[i] != s[s.size()-i-1]) return false;
+            }
+            return true;
         }
-    }
-    return true;
-}
+};
