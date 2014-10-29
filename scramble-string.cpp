@@ -1,26 +1,26 @@
 class Solution {
     public:
         bool isScramble(string s1, string s2) {
-            return helper(s1, 0, s1.size() - 1, s2, 0, s2.size()-1);
-        }
-
-        bool helper(string &s1, int start1, int end1, string &s2, int start2, int end2){
-            if((end1-start1) != (end2-start2)) return false;
-            int n = end1 - start1;
-            bool flag = true;
-            for(int i = 0; i != n; ++i){
-                if(s1[start1+i] != s2[start2+i]){
-                    flag = false;
-                    break;
+            if(s1.size() != s2.size()) return false;
+            int n = s1.size();
+            vector<vector<vector<bool> > > dp(n+1,
+                vector<vector<bool> >(n, vector<bool>(n, false)));
+            for(int len = 1; len != n + 1; ++len){
+                for(int i = 0; i != n - len + 1; ++i){
+                    for(int j = 0; j != n - len + 1; ++j){
+                        if(len == 1) dp[len][i][j] = (s1[i] == s2[j]);
+                        else{
+                            for(int k = 1; k < len; ++k){
+                                if(dp[k][i][j] && dp[len-k][i+k][j+k] ||
+                                   dp[k][i][j+len-k] && dp[len-k][i+k][j]){
+                                    dp[len][i][j] = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            if(flag == true) return true;
-            for(int i = 1; i < n - 1; ++i){
-                if(helper(s1, start1, start1+i, s2, start2, start2+i) && 
-                        helper(s1, start1+i, end1,   s2, start2+i, end2)) return true;
-                if(helper(s1, start1, start1+i, s2, start2+n-i, end2) && 
-                        helper(s1, start1+i, end1,   s2, start2, start2+n-1)) return true;
-            }
-            return false;        
+            return dp[n][0][0];
         }
 };
