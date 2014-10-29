@@ -1,38 +1,27 @@
 class Solution {
     public:
         int maximalRectangle(vector<vector<char> > &matrix) {
-            vector<vector<int> > vertical, horizontal;
+            if(matrix.size() == 0 || matrix[0].size() == 0) return 0;
+            int nRow = matrix.size();
+            int nCol = matrix[0].size();
             int max = 0;
-            vertical.resize(matrix.size()); horizontal.resize(matrix.size());
-            for(int i = 0; i != matrix.size(); ++i){
-                vertical[i].resize(matrix[i].size());
-                horizontal[i].resize(matrix[i].size());
-            }
-            for(int i = 0; i != matrix.size(); ++i){
-                for(int j = 0; j != matrix[i].size(); ++j){
-                    int s = 0;
-                    if(matrix[i][j] == '0'){
-                        vertical[i][j] = 0; horizontal[i][j] = 0;
+            vector<int> H(nCol+1, 0);
+            for(int row = 0; row != nRow; ++row){
+                stack<int> s;
+                for(int i = 0; i != nCol + 1; ++i){
+                    if(i < nCol){
+                        if(matrix[row][i] == '1') H[i] ++;
+                        else H[i] = 0;
                     }
+                    if(s.empty() || H[s.top()] <= H[i]) s.push(i);
                     else{
-                        if(i == 0 && j == 0){
-                            vertical[i][j] = 1; horizontal[i][j] = 1;
-                            s = 1;
-                        }else if(i == 0 && j != 0){
-                            horizontal[i][j] = horizontal[i][j-1] + 1;
-                            vertical[i][j] = 1;
-                            s = horizontal[i][j];
-                        }else if(i != 0 && j == 0){
-                            vertical[i][j] = vertical[i-1][j] + 1;  
-                            horizontal[i][j] = 1;
-                            s = vertical[i][j];
-                        }else{
-                            horizontal[i][j] = horizontal[i][j-1] + 1;
-                            vertical[i][j] = vertical[i-1][j] + 1;
-                            s = vertical[i][j] * horizontal[i][j];
+                        while(!s.empty() && H[s.top()] > H[i]){
+                            int t = s.top(); s.pop();
+                            int area = H[t] * (s.empty() ? i : i - s.top() - 1);
+                            if(area > max) max = area;
                         }
                     }
-                    if(s > max) max = s;
+                    s.push(i);
                 }
             }
             return max;
